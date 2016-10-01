@@ -20,7 +20,7 @@ BEGIN{
 no warnings 'experimental';
 use FindBin;
 require "$FindBin::Bin/../lib/tokenize.pl";
-# Определение приоритета операций
+# Определение приоритета операторов
 sub pr {
 	my $op = shift;
 	if($op=~m[^[()]$]) {return 0}
