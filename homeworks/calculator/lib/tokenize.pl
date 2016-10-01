@@ -39,7 +39,7 @@ chomp(my $expr = shift);
     elsif ($res[$_] =~ m[\d*[.]?\d+(?:[eE][-+]?\d+)?]) {
     $res[$_]+=0;
     # Проверка на несколько чисел подряд
-    if (($_!=$#res and $res[$_+1]=~/\d/) or ($_ and $res[$_-1] =~ /\d/)) {
+    if (($_<$#res and $res[$_+1]=~/\d/) or ($_>0 and $res[$_-1] =~ /\d/)) {
     die "Not enough operators!";
     }
     }
