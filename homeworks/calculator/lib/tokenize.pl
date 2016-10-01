@@ -29,7 +29,7 @@ sub tokenize {
 chomp(my $expr = shift);
     my @res; 
     # Заполнение массива подходящими данными
-    @res=($expr=~m[[-+]|[*/^()]|\d*[.]?\d(?:[eE][-+]?\d+)?]g); 
+    @res=($expr=~m[[-+*/^()]|\d*[.]?\d(?:[eE][-+]?\d+)?]g); 
     for (0..$#res) {
     # Обработка унарных операторов
     if ($res[$_]=~m[^[-+]$] and ($_==0 or $res[$_-1]=~m[^(?:[-+*^/(]|U[-+])$])) {
@@ -49,7 +49,7 @@ chomp(my $expr = shift);
     if ($res[$_]=~m[^U[-+]$] and ($_==$#res or $res[$_+1]=~ m[^[-+*/^)]$])) {
     die "Incorrect expression after unary operator!";
     }
-    elsif ($res[$_]=~m|^[-+*/^]$| and ($_==0 or $_==$#res or $res[$_+1]!~m[\(|\d|U[-+]])) {
+    elsif ($res[$_]=~m[^[-+*/^]$] and ($_==0 or $_==$#res or $res[$_+1]!~m[^\(|\d|U[-+]$])) {
     die "Binary operator doesn't have enough operands!";
     }
     }
