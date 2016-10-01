@@ -20,7 +20,7 @@ BEGIN{
 no warnings 'experimental';
 use FindBin;
 require "$FindBin::Bin/../lib/tokenize.pl";
-
+# Определение приоритета операций
 sub pr {
 	my $op = shift;
 	if($op=~m[^[()]$]) {return 0}
@@ -28,13 +28,12 @@ sub pr {
 	elsif($op=~m[^[*/]$]) {return 2}
 	elsif($op=~m[^U[-+]|[\^]$]) {return 3}
 }
-
+# Преобразование в обратную польскую нотацию
 sub rpn {
 	my $expr = shift;
 	my $source = tokenize($expr);
 	my @rpn;
 	my @stack;
-	# Преобразование в польскую нотацию 
 	for (@$source) {
 	if ($_=~m[\d+]) {push @rpn, $_; next}
         if ($_=~m[^\($]) {push @stack, $_; next}
