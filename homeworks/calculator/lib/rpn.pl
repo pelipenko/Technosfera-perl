@@ -26,7 +26,7 @@ sub pr {
 	if($op=~m[^[()]$]) {return 0}
 	elsif($op=~m[^[-+]$]) {return 1}
 	elsif($op=~m[^[*/]$]) {return 2}
-	elsif($op=~m[^U[-+]|[\^]$]) {return 3}
+	elsif($op=~m[^U[-+]|\^$]) {return 3}
 }
 # Преобразование в обратную польскую нотацию
 sub rpn {
