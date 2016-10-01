@@ -19,10 +19,22 @@ no warnings 'experimental';
 
 sub evaluate {
 	my $rpn = shift;
-
-	# ...
-
-	return 0;
+	my @stack;
+	for (@$rpn) {
+	if ($_ eq 'U+') {}
+	elsif ($_ eq 'U-') { push @stack, -pop(@stack) }
+	elsif ($_ eq '+')  { push @stack, pop(@stack) + pop @stack }
+	elsif ($_ eq '-')  { push @stack, -pop(@stack) + pop @stack }
+	elsif ($_ eq '*')  { push @stack, pop(@stack) * pop @stack }
+	elsif ($_ eq '/')  { 
+	push @stack, do { my $x=splice @stack,-2,1; my $y=splice @stack,-1,1; $x/$y } 
+	}
+	elsif ($_ eq '^')  { 
+	push @stack, do { my $x=splice @stack,-2,1; my $y=splice @stack,-1,1; $x**$y } 
+	}
+	else { push @stack, $_ }
+	}
+return 0+pop @stack;
 }
 
 1;
