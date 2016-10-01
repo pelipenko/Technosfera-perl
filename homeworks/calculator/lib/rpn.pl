@@ -36,8 +36,8 @@ sub rpn {
 	my @stack;
 	for (@$source) {
 	if ($_=~m[\d+]) {push @rpn, $_; next}
-        if ($_=~m[^\($]) {push @stack, $_; next}
-        if ($_=~m[^\)$]) {
+        if ($_=~m[\(]) {push @stack, $_; next}
+        if ($_=~m[\)]) {
 	while (@stack and $stack[-1] ne '(') {push @rpn, pop @stack} 
 	pop @stack; next}
 	while (@stack and pr($stack[-1]) >= pr($_)) {
