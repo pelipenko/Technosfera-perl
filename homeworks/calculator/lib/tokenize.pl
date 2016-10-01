@@ -26,11 +26,33 @@ BEGIN{
 no warnings 'experimental';
 
 sub tokenize {
-	chomp(my $expr = shift);
-	my @res;
-
-	# ...
-
+chomp(my $expr = shift);
+	my @res; 
+	# Заполнение массива подходящими данными
+	@res=($expr=~m[[-+]|[*/^()]|\d*[.]?\d(?:[eE][-+]?\d+)?]g);
+	for (0..$#res) {
+	# Обработка унарных операторов
+	if ($res[$_]=~m[^[-+]$] and ($_==0 or $res[$_-1]=~m[^(?:[-+*^/(]|U[-+])$])) {
+	$res[$_]="U".$res[$_];
+	}
+	# Преобразования в числа
+    elsif ($res[$_] =~ m[\d*[.]?\d+(?:[eE][-+]?\d+)?]) {
+    $res[$_]+=0;
+    # Проверка на несколько чисел подряд
+    if (($_!=$#res and $res[$_+1]=~/\d/) or ($_ and $res[$_-1] =~ /\d/)) {
+    die "Not enough operators!";
+    }
+    }
+    }
+    # Проверка на корректность операторов
+    for (0..$#res) {
+    if ($res[$_]=~m[^U[-+]$] and ($_==$#res or $res[$_+1]=~ m[^[-+*/^)]$])) {
+	die "Incorrect expression after unary operator!";
+	}
+	elsif ($res[$_]=~m|^[-+*/^]$| and ($_==0 or $_==$#res or $res[$_+1]!~m[\(|\d|U[-+]])) {
+	die "Binary operator doesn't have enough operands!";
+	}
+	}
 	return \@res;
 }
 
