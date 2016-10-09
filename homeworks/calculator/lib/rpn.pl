@@ -20,34 +20,38 @@ BEGIN{
 no warnings 'experimental';
 use FindBin;
 require "$FindBin::Bin/../lib/tokenize.pl";
-# Определение приоритета операторов
+
+# Функция приоритета операторов
 sub pr {
-	my $op = shift;
-	if($op=~m[^[()]$]) {return 0}
-	elsif($op=~m[^[-+]$]) {return 1}
-	elsif($op=~m[^[*/]$]) {return 2}
-	elsif($op=~m[^U[-+]|\^$]) {return 3}
-}
-# Преобразование в обратную польскую нотацию
-sub rpn {
-	my $expr = shift;
-	my $source = tokenize($expr);
-	my @rpn;
-	my @stack;
-	for (@$source) {
-	if ($_=~m[\d+]) {push @rpn, $_; next}
-        if ($_=~m[\(]) {push @stack, $_; next}
-        if ($_=~m[\)]) {
-	while (@stack and $stack[-1] ne '(') {push @rpn, pop @stack} 
-	pop @stack; next}
-	while (@stack and pr($stack[-1]) >= pr($_)) {
-	if (pr($stack[-1]) == pr($_) and pr($_) > 2) {last}
-	push @rpn, pop @stack;
-	}
-	push @stack, $_;
-	}
-	while (@stack) {push @rpn, pop @stack}
-	return \@rpn;
+    my $op = shift;
+    if    ( $op =~ m[^[()]$] )     { return 0 }
+    elsif ( $op =~ m[^[-+]$] )     { return 1 }
+    elsif ( $op =~ m[^[*/]$] )     { return 2 }
+    elsif ( $op =~ m[^U[-+]|\^$] ) { return 3 }
 }
 
+sub rpn {
+    my $expr   = shift;
+    my $source = tokenize($expr);
+    my @rpn;
+    my @stack;
+
+    # Преобразование в польскую нотацию
+    for (@$source) {
+        if ( $_ =~ m[\d+] ) { push @rpn,   $_; next }
+        if ( $_ =~ m[\(] )  { push @stack, $_; next }
+        if ( $_ =~ m[\)] ) {
+            while ( @stack and $stack[-1] ne '(' ) { push @rpn, pop @stack }
+            pop @stack;
+            next;
+        }
+        while ( @stack and pr( $stack[-1] ) >= pr($_) ) {
+            if ( pr( $stack[-1] ) == pr($_) and pr($_) > 2 ) { last }
+            push @rpn, pop @stack;
+        }
+        push @stack, $_;
+    }
+    while (@stack) { push @rpn, pop @stack }
+    return \@rpn;
+}
 1;
