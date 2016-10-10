@@ -10,14 +10,18 @@ sub filter {
     my ( $arr, $table, $opt, $width ) = @_;
     for my $n (@$arr) {
 
-        if (   ( $$opt{band} and $$opt{band} ne $$n{band} )
-            or ( $$opt{year}   and $$opt{year} != $$n{year} )
-            or ( $$opt{album}  and $$opt{album} ne $$n{album} )
-            or ( $$opt{track}  and $$opt{track} ne $$n{track} )
-            or ( $$opt{format} and $$opt{format} ne $$n{format} ) )
-        {
-            next;
+        my $flag = "";
+        for ( keys %$n ) {
+            if ( $$opt{$_}
+                and ( $$opt{$_} ne $$n{$_} and $_ ne "year" )
+                || ( $$opt{$_} != $$n{$_} and $_ eq "year" ) )
+            {
+                $flag++;
+                last;
+            }
         }
+
+        if ($flag) { next }
 
         push @$table, $n;
         for ( keys %$n ) {
