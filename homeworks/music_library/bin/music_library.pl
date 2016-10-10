@@ -6,7 +6,7 @@ use warnings;
 use FindBin '$Bin';
 use lib "$Bin/../lib";
 
-use Local::Modules::Parser qw(parse);
+use Local::MusicLibrary::Parser qw(parse);
 use Local::MusicLibrary qw(table);
 use Getopt::Long;
 
