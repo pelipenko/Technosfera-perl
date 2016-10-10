@@ -13,8 +13,8 @@ sub filter {
         my $flag = "";
         for ( keys %$n ) {
             if ( $$opt{$_}
-                and ( $$opt{$_} ne $$n{$_} and $_ ne "year" )
-                || ( $$opt{$_} != $$n{$_} and $_ eq "year" ) )
+                and ( $_ ne "year" and $$opt{$_} ne $$n{$_}  )
+                || ( $_ eq "year" and $$opt{$_} != $$n{$_} ) )
             {
                 $flag++;
                 last;
