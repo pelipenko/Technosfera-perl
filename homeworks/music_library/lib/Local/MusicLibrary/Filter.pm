@@ -1,4 +1,4 @@
-package Local::Modules::Filter;
+package Local::MusicLibrary::Filter;
 
 use strict;
 use warnings;
