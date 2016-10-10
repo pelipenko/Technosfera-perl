@@ -1,4 +1,4 @@
-package Local::Modules::Parser;
+package Local::MusicLibrary::Parser;
 
 use strict;
 use warnings;
