@@ -21,8 +21,8 @@ our $VERSION = '1.00';
 
 =cut
 
-use Local::Modules::Filter qw(filter);
-use Local::Modules::Printer qw(printer);
+use Local::MusicLibrary::Filter qw(filter);
+use Local::MusicLibrary::Printer qw(printer);
 
 use Exporter 'import';
 our @EXPORT_OK = ('table');
