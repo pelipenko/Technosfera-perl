@@ -21,7 +21,7 @@ our $VERSION = '1.00';
 
 =cut
 
-use Local::MusicLibrary::Filter qw(&filter &string);
+use Local::MusicLibrary::Filter qw(&filter $string);
 use Local::MusicLibrary::Printer qw(printer);
 
 use Exporter 'import';
