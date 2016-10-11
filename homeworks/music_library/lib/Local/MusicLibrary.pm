@@ -21,7 +21,7 @@ our $VERSION = '1.00';
 
 =cut
 
-use Local::MusicLibrary::Filter qw(filter);
+use Local::MusicLibrary::Filter qw(&filter &string);
 use Local::MusicLibrary::Printer qw(printer);
 
 use Exporter 'import';
@@ -40,7 +40,7 @@ sub table {
 
     #сортировка
     if ( $$opt{sort} ) {
-        if ( $$opt{sort} ne "year" ) {
+        if ($string) {
             @table =
               sort { $$a{ $$opt{sort} } cmp $$b{ $$opt{sort} } } @table;
         }
