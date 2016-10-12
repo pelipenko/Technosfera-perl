@@ -4,24 +4,18 @@ use strict;
 use warnings;
 
 =encoding utf8
-
 =head1 NAME
-
 Local::MusicLibrary - core music library module
-
 =head1 VERSION
-
 Version 1.00
-
 =cut
 
 our $VERSION = '1.00';
 
 =head1 SYNOPSIS
-
 =cut
 
-use Local::MusicLibrary::Filter qw(&filter $string);
+use Local::MusicLibrary::Processor qw(filter sorter);
 use Local::MusicLibrary::Printer qw(printer);
 
 use Exporter 'import';
@@ -38,17 +32,8 @@ sub table {
     #составление таблицы
     filter( $arr, \@table, $opt, \%width );
 
-    #сортировка
-    if ( $$opt{sort} ) {
-        if ($string) {
-            @table =
-              sort { $$a{ $$opt{sort} } cmp $$b{ $$opt{sort} } } @table;
-        }
-        else {
-            @table =
-              sort { $$a{ $$opt{sort} } <=> $$b{ $$opt{sort} } } @table;
-        }
-    }
+    #сортировка таблицы
+    sorter( \@table, $opt );
 
     #вывод на экран
     if ( $$opt{columns} ) {
