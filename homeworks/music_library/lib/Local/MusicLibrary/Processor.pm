@@ -8,8 +8,8 @@ our @EXPORT_OK = qw(filter sorter);
 
 sub numfltr    { my ( $a, $b ) = @_; return $a != $b; }
 sub stringfltr { my ( $a, $b ) = @_; return $a ne $b; }
-sub numsrt    { my ( $a, $b, $k ) = @_; return $a->{$k} <=> $b->{$k}; }
-sub stringsrt { my ( $a, $b, $k ) = @_; return $a->{$k} cmp $b->{$k}; }
+sub numsrt    { my ( $a, $b, $k ) = @_; return $$a{$k} <=> $$b{$k}; }
+sub stringsrt { my ( $a, $b, $k ) = @_; return $$a{$k} cmp $$b{$k}; }
 
 my $rules = {
     year   => { fltr => \&numfltr,    srt => \&numsrt },
