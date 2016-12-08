@@ -1,24 +1,82 @@
-package Local::Habr;
+package Habr;
 
 use strict;
 use warnings;
+use Mouse;
+use DDP;
+use feature 'say';
+use Client;
 
-=encoding utf8
+sub BUILD {
+    my ($self) = @_;
 
-=head1 NAME
+    return;
+}
 
-Local::Habr - habrahabr.ru crawler
+sub _get {
+    my ( $self, $href ) = @_;
+    my $cl = Client->new();
 
-=head1 VERSION
+    $cl->connect($href) or die $@;
 
-Version 1.00
+    return $cl->parse_new();
+}
 
-=cut
+sub get_href_by_nick {
+    my ( $self, $nick ) = @_;
+    p $nick;
+    return "https://habrahabr.ru/users/$nick/";
+}
 
-our $VERSION = '1.00';
+sub get_user {
+    my ( $self, $nick ) = @_;
 
-=head1 SYNOPSIS
+    my $info;
 
-=cut
+    $nick =~ s/@//g;
+    eval {
+        $info = $self->_get( $self->get_href_by_nick($nick) );
+        1;
+    };
+    if ($@) {
+        print "$@";
+        return undef;
+    }
+
+    return $info->{user};
+}
+
+sub get_post {
+    my ( $self, $post_id ) = @_;
+
+    my $href = 'https://habrahabr.ru/post/' . $post_id . '/#habracut';
+    my $info;
+    eval {
+        $info = $self->_get($href);
+        $info->{article}{href} = $href;
+
+        1;
+    };
+    if ($@) {
+        print "$@";
+        return undef;
+    }
+
+    return $info;
+}
+
+sub get_company {
+    my ( $self, $href ) = @_;
+    my $info;
+    eval {
+        $info = $self->_get($href);
+        1;
+    };
+    if ($@) {
+        print "$@";
+        return undef;
+    }
+    return $info;
+}
 
 1;
