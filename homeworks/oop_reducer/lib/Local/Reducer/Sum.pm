@@ -2,7 +2,6 @@ package Local::Reducer::Sum;
 
 use strict;
 use warnings;
-use DDP;
 use parent 'Local::Reducer';
 
 =encoding utf8
@@ -19,28 +18,10 @@ our $VERSION = '1.00';
 
 my $res = 0;
 
-sub reduce_all {
-	my $self = shift;
-	while(defined(my $value = $self -> parsed)) {
-		$res += $value;
-		$self -> {value} = $res;} 
-	return $res; 
-}
-
-sub reduce_n {
-	my $self = shift;
-	my $n = shift;
-	for (1..$n) { 
-		if (defined(my $value = $self -> parsed)) {
-			$res += $value;
-		} 
-		else { 
-		$self -> {value} = $res; 
-		return $res; 
-		}
-	}
-	$self -> {value} = $res;
-	return $res;
+sub parsed($) {
+  my ($self, $res, $obj) = @_;
+  my $field = $self -> {field};
+  return $res + $obj -> get($field, 0);
 }
 
 1;

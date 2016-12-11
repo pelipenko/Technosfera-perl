@@ -306,7 +306,6 @@ sub get_post {
     my $info = Habr->new()->get_post($post_id);
     return undef unless ( defined $info );
 
-   #print "$self->get_user($info->{user}{nick}, $refresh, $info->{user}{href})";
     my $uid =
       $self->get_user( $info->{user}{nick}, $refresh, $info->{user}{href} )
       ->{id};
@@ -332,11 +331,9 @@ sub self_commenters {
     my ($self) = @_;
 
     my $sql_self =
-        'SELECT * FROM users as u WHERE id IN '
-      . '(SELECT c.user_id FROM commenters as c '
-      . 'JOIN data as d on c.post_id = d.id and c.user_id = d.user_id) '
+        'SELECT * FROM users as u JOIN (commenters as c '
+      . 'JOIN data as d on (c.post_id = d.id and c.user_id = d.user_id)) on c.user_id = id  '
       . 'GROUP BY u.nick';
-
     my $coms = $self->dbh->selectall_hashref( $sql_self, ['nick'] );
     return $coms;
 }
@@ -345,9 +342,9 @@ sub desert_posts {
     my ( $self, $min_count ) = @_;
 
     my $sql_desert =
-        'SELECT * FROM data as d WHERE '
-      . '(SELECT SUM(comment_count) FROM commenters as c '
-      . 'WHERE c.post_id = d.id) < ?';
+        'SELECT * FROM data as d '
+      . 'JOIN commenters as c on (c.post_id = d.id '
+      . 'and (SELECT SUM(comment_count) FROM commenters as c) < ?)';
     my $posts =
       $self->dbh->selectall_hashref( $sql_desert, ['href'], {}, $min_count );
     return $posts;

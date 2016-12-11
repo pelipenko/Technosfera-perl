@@ -2,6 +2,7 @@ package Local::Reducer::MaxDiff;
 
 use strict;
 use warnings;
+use List::Util 'max';
 use parent 'Local::Reducer';
 
 =encoding utf8
@@ -16,27 +17,12 @@ our $VERSION = '1.00';
 =head1 SYNOPSIS
 =cut
 
-my $res = 0;
 
-sub reduce_all {
-	my $self = shift;
-	while(defined(my $value = $self -> parsed)) { 
-		$res = $value > $res ? $value : $res;
-		$self -> {value} = $res; }
-	return $res;
+sub parsed($) {
+  my ($self, $res, $obj) = @_;
+  my $top = $self -> {top};
+  my $bottom = $self -> {bottom};
+  return $res = max($res, abs($obj -> get($top, 0) - $obj -> get($bottom, 0)));
 }
-
-sub reduce_n {
-	my $self = shift;
-	my $n = shift;
-		for (1..$n) {
-			if (defined(my $value = $self -> parsed)){
-			$res = $value > $res ? $value : $res;
-			$self -> {value} = $res;
-			} else { return $res; }
-		}
-	return $res;
-}
-
 
 1;
